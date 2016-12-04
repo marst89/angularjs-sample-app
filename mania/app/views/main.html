@@ -1,0 +1,54 @@
+  <div class="row">
+      <div ng-controller="MainCtrl">
+         <div class="col-xs-7">
+            <div ng-controller="SubCtrl">
+              <h1 ng-bind="title"></h1>
+            </div>
+            <h2>Movies</h2>
+            <button class="btn btn-info" ng-click="goToRandomMovie()">Random Movie</button>
+            <div ng-repeat="movie in movies" style="clear: both;">
+              <a ng-href="movie/{{movie.id}}/{{movie.slug}}">
+                <img ng-src="{{movie.image}}" style="float: left; width: 80px; margin-right: 10px;">
+                <h3 ng-bind="movie.title"></h3>
+                <p style="font-size: 0.8em; font-style: italic;" ng-bind="movie.category">
+                <p ng-bind="movie.description"></p>
+              </a>
+            </div>
+          </div>
+          <div class="col-xs-1">
+            <span class="glyphicon glyphicon-menu-right" ng-show="closed" ng-click="closed=false"></span>
+            <span class="glyphicon glyphicon-menu-down" ng-hide="closed" ng-click="closed=true"></span>
+          </div>
+
+        <div class="col-xs-4" ng-hide="closed">
+          <h2>Add</h2>
+          <div class="form-group">
+            <label>Title</label>
+            <input class="form-control" ng-keyup="validateTitle()" placeholder="Enter title" ng-model="movie.title">
+          </div>
+          <div class="form-group">
+            <label>Image</label>
+            <input class="form-control" placeholder="Image" ng-model="movie.image">
+            <div ng-show="movie.image.length > 7 && movie.image.substr(-3) === 'jpg'">
+              <h4>Preview</h4>
+              <img ng-src="{{movie.image}}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select class="form-control" ng-change="checkCategorySelected()" ng-model="movie.category">
+              <option value="">-</option>
+              <option value="Epic">Epic</option>
+              <option value="Awesome">Awesome</option>
+              <option value="Average">Average</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control" ng-blur="checkDescription()" ng-model="movie.description"></textarea>
+          </div>
+
+          <button class="btn btn-info" ng-show="isValid()" ng-click="addMovie()">Add</button>
+        </div>
+    </div>
+  </div>
