@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('movieManiaApp')
 .controller('MovieCtrl', function($scope, $routeParams){
     console.debug($routeParams.id);

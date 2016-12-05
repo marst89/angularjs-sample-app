@@ -10,6 +10,10 @@
 angular.module('movieManiaApp')
   .controller('MainCtrl', function ($scope, $location, $http) {
     $http.get('/movies.json').success(function(data){
+      //Building the slugs dynamically
+      for(var i in data) {
+        data[i].slug = data[i].title.toLowerCase().replace(/ /g,'-');
+      }
       console.debug(data);
       $scope.movies = data;
     });
@@ -27,7 +31,7 @@ angular.module('movieManiaApp')
         var movie = $scope.movies[index];
         var url = 'movie/'+movie.id+'/'+movie.slug;
         $location.url(url);
-    }
+    };
 
     $scope.validateTitle = function(){
         if($scope.movie.title.length > 0) {
