@@ -8,14 +8,9 @@
  * Controller of the movieManiaApp
  */
 angular.module('movieManiaApp')
-  .controller('MainCtrl', function ($scope, $location, $http) {
-    $http.get('/movies.json').success(function(data){
-      //Building the slugs dynamically
-      for(var i in data) {
-        data[i].slug = data[i].title.toLowerCase().replace(/ /g,'-');
-      }
-      console.debug(data);
-      $scope.movies = data;
+  .controller('MainCtrl',['$scope', '$location', 'Movies', function ($scope, $location, Movies) {
+    Movies.load().then(function(listOfMovies){
+      $scope.movies = listOfMovies;
     });
 
     $scope.movie = {
@@ -53,6 +48,7 @@ angular.module('movieManiaApp')
 
     $scope.addMovie = function(){
         $scope.movies.push(angular.copy($scope.movie));
+        Movies.add($scope.movie);
     };
 
     $scope.isValid = function(){
@@ -68,4 +64,4 @@ angular.module('movieManiaApp')
         return true;
     };
 
-  });
+  }]);

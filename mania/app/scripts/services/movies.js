@@ -8,26 +8,38 @@
  * Factory in the movieManiaApp.
  */
 angular.module('movieManiaApp')
-  .factory('Movies', function ($http) {
+  .factory('Movies', function ($q) {
     //Private area - anything defined here will NOT
     //be accessible from other components of the app
-    var moviesRequest = null;
+    var key = 'movieMania:movies';
+
+    function loadMovies(){
+      return JSON.parse(localStorage.getItem(key)) || [];
+    }
 
     // Public API here
     return {
       load: function () {
-        if(!moviesRequest) {
-          moviesRequest = $http.get('/movies.json');
-        }
-        return moviesRequest;
+        return $q.when(loadMovies());
       },
-      find: function(id, movies) {
+      get: function(id) {
+        var foundMovie;
+        var movies = loadMovies();
         for(var i in movies) {
           var movie = movies[i];
-          if(id === movie.id) {
-            return movie;
+          if(movie.id === id) {
+            foundMovie = movie;
+            break;
           }
         }
+        return $q.when(foundMovie);
+      },
+      add: function(obj) {
+        var movies = loadMovies();
+        obj.id = movies.length;
+        obj.slug = obj.title.toLowerCase().replace(/ /g, '-');
+        movies.push(obj);
+        localStorage.setItem(key, JSON.stringify(movies));
       }
     };
   });
